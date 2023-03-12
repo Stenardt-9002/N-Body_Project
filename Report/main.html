@@ -1,0 +1,824 @@
+<html lang="en"><head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <title>Students - Hprcse</title>
+    </head>
+    <body bgcolor="#f8f8f8">
+    
+    <div align="left">
+    <table width="90%" height="20%" align="center">
+    <tbody><tr><td width="20%" height="20%"> <img src="hprcseLogo.png" width="100%"></td>
+    <td width="80%"> <font size="6" color="#101010">High Performance Reconfigurable Computing System Engineering Group</font>
+    </td><td>
+    </td></tr></tbody></table>
+    </div>
+    <div>
+    <table width="100%" height="8%" bgcolor="#003060">
+    <tbody><tr width="90%" align="center">
+            <td> <font align="center" size="3" color="#ffffff"><h1>High Performance Computing Course Projects</h1></font></td>
+    </tr>
+    </tbody></table>
+    </div>
+    <div>
+        <table width="90%" align="center" border=1>
+        <tbody><tr><td width="25%" height="100%">
+            <ul>
+                <p><h4>CED17I047 </h4></p>
+                <p><h4>Ritvik Raj Singh </h4></p>
+            </ul>              
+            </td><td width="80%">
+            
+            <p><b>Problem Statement:  <strong>N body problem </strong> </b></p>
+            <ul>
+            <li>The N-body problem is one of famous problems in classical physics for predicting the motion of
+                n celestial body that interacts gravitationally in free space.It is a problem for predicting individual
+                motion of bodies starting from a quasi state.</li>
+            </ul>
+        </td>
+    </tr></tbody></table>
+    </div>
+    
+    <div align="center">
+        <button><a href="#THA">Theoretical Analysis</a></button> 
+        <button><a href="#SEC">Serial Code</a></button>
+        <button><a href="#OMP">OpenMP Implementation and Code</a></button>
+        <button><a href="#MPI">MPI Implementation and Code</a></button>
+        <button><a href="#CUDA">CUDA Implementation and Code</a></button>
+    </div>
+
+    <!-- <video width="640" height="240" autoplay loop> -->
+       <div style="margin-left: 30%;" >
+        <video width="640" height="640" controls loop>
+        <source src="openmpsim.mp4" type="video/mp4" >
+            
+      </video>
+      <br>
+      <h5>N body simulation for 5040 bodies over 2000 iterations</h5>
+       </div>
+    <div>
+        <table width="90%" align="center" border=1> 
+            <tbody><tr><td> <b id = "THA" > Theoretical Analysis: </b></td></tr>
+                <tr><td>
+                    The problem has been derived from motivation to understand motions of sun ,planets and other celestial bodies in global clusters . Consider general relativity the problem is difficult to solve and still is an open problem .<br><br> The approach for the problem is to calculate new velocity and position (wrt to origin )of each body after infinitesimal time . More the time difference is <strong>small</strong>, the more <strong>heavy</strong> is the computation .
+                    <br> 
+                    <div><h4>Time and Space</h4><strong>(BruteForce approach)</strong></div>
+                        
+                    <br>
+                        After each body interacts with the rest of the n-1 body and experiences force from it , the new velocity and position vector  are updated .
+                        
+                        Each step requires an O(n) memory factor and O(n<sup>2</sup>) for time complexity .(each interaction requires updation of each body with rest of n-1 ).
+                        <br>
+                        Smaller is time difference ,frequent vector updation will result in smoother body animation .
+                        
+                        
+                        <br>
+                        <h4>Velocity and vector Calculation </h4>
+                        Assuming Classical Newton laws to hold true following formulas are used for calculating for
+velocity and acceleration.
+The simulation is based on updating the vector and velocity information at delta t timestep
+instead of continuous time simulation<p>deltaT &#9783; 0 .To make the simulation smooth lower the
+    deltaT value.</p>  
+
+    <h4>Pseudo Code</h4>
+    The algorithm steps are:<br>
+For each time step<br>
+&emsp;Compute force computation on ith body by all n-1 body :<br>
+&emsp;&emsp;Compute Vector position of j th body wrt to ith body in both x and y axis<br>
+&emsp;&emsp;Computer rvector = (sqrt(dx*dx+dy*dy))^(3)<br>
+&emsp;&emsp;F = (Gm<sub>i</sub>m<sub>j</sub>*vec)/(rvector) <br>
+&emsp;&emsp;Compute acceleration on each i,j body and thus compute i,j velocity value of both<br>
+&emsp;&emsp;i and j thus new r vector position of i with new velocity.<br>
+&emsp;Once the value of force is computed for each body then update the new position of each<br>
+&emsp;body simultaneously .<br>
+Repeat until time finished<br>
+
+                </td></tr>
+
+                <!-- <tr><td> Your Description here</td></tr> -->
+            </tbody>
+        </table><br><br>
+    
+        <table width="90%" align="center" border=1> 
+            <tbody><tr><td> <b id = "SEC"> Serial Code: <a href="serialcode.cpp">Click here to see source code</a></b></td></tr>
+                <tr><td> 
+                    <strong>//Inputting Data</strong> <br>
+                    &emsp; Read position x ,position y data for n bodies <br>
+
+                    <br><br>
+                    <strong>COMPUTATION_FUNCTION</strong>
+                    <strong>Calculate each body force vector</strong>
+                    <br>
+
+                    &emsp;for (lld i1 = 0; i1 < n; i1++)<br>
+                    &emsp;{<br>
+                        &emsp;   &emsp;//each body <br>
+                        &emsp;&emsp;// current status then update each body wrt static position of <br>
+                           
+                        &emsp;&emsp;m1 = mass[i1];<br>
+                        &emsp;&emsp;newposxi1 = posx[i1];newposyi1 = posy[i1];<br>
+                        &emsp;&emsp;Forcex1 = 0;<br>
+                        &emsp;&emsp;Forcey2 = 0;<br>
+                        &emsp;&emsp;//consider all bodies except i1 th to effect jth<br>
+                        &emsp;&emsp;<strong>Calculate force on ith body from rest n-1</strong> 
+                        <br>
+                        &emsp;&emsp;for (j1 = 0; j1 < n ; j1++)<br>
+                        &emsp;&emsp;&emsp;{<br>
+                            &emsp;&emsp;&emsp;if (j1!=i1)<br>
+                            &emsp;&emsp;&emsp;&emsp;{<br>
+                                &emsp;&emsp;&emsp;    &emsp;&emsp;m2 = mass[j1];<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;r1vector = posx[j1]-posx[i1] ; //wrt to current body<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;r2vector = posy[j1]-posy[i1] ; //wrt to current body<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;rdiffector  = r1vector*r1vector+r2vector*r2vector;<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;rdiffector = pow(rdiffector,1.5);<br>
+            
+                                &emsp;&emsp;&emsp;&emsp;&emsp;Forcex1 = Forcex1+ (((Gconstant*m1*m2)/rdiffector)*r1vector) ;<br>
+                                &emsp;&emsp;&emsp;&emsp;&emsp;Forcey2 = Forcey2+ (((Gconstant*m1*m2)/rdiffector)*r2vector) ;<br>
+            
+                                &emsp;&emsp;&emsp;&emsp;}<br>
+                            
+                                &emsp;&emsp;&emsp;}<br>
+                                &emsp;&emsp; <br>
+                                &emsp;&emsp;<strong>Updating new values</strong><br>
+                                &emsp;&emsp;accelerationx = Forcex1/m1;<br>
+                                &emsp;&emsp;tempvx1 = velex[i1] + accelerationx*deltat;<br>
+                                &emsp;&emsp;posx[i1] += (velex[i1]*deltat+(0.5*accelerationx*deltat*deltat) );<br>
+                                &emsp;&emsp;velex[i1] = tempvx1;<br>
+            
+                                &emsp;&emsp;//moement in y direction <br>
+                        
+                                &emsp;&emsp;accerlerationy = Forcey2/m1;<br>
+                                &emsp;&emsp;tempvy2 = veley[i1] + accerlerationy*deltat;<br>
+                                &emsp;&emsp;posy[i1] += (veley[i1]*deltat+(0.5*accerlerationy*deltat*deltat) );<br>
+                                &emsp;&emsp;veley[i1] = tempvy2;<br>
+                    
+                                &emsp;}<br>
+            
+
+                        <br><br><br>
+
+
+                </td></tr>
+            </tbody>
+        </table>
+        <br>
+
+
+
+        <table width="90%" align="center" border=1> 
+            <tbody><tr><td> <b id="OMP" > OpenMP Implementation and Code: <a href="2nd.cpp">Click here for source code</a><br></b>Click here to see Report :    <a href="CED17I047-DA1Report.pdf">Report</a> </td></tr>
+                <tr><td> 
+                    <br>
+                    <strong>Parallelisation strategy</strong>
+                    <br>
+                    <br>
+                    <br>
+                    Since OpenMP uses shared memory for parallelisation thus cyclic distribution computation
+                    parallelisation is easy.
+                    <br>
+
+                    Thus #pragma omp parallel for directive is added for force computation from all n-1 bodies and
+<br>workload is distributed on static scheduling where chunks of data are equally distributed to the
+number of threads that are available .
+                    <br>
+                    <br> 
+                    The workload is distributed in such manner where all bodies individual force calculation is divided by number of threads 
+                    <br>
+                    Since force computed on one body will result in updation of velocity and position vector , Data integrity is to be ensured.
+                    <br>
+                    The above parallelisation is done by making velocity and postion vector private ,thus making the process thread safe.
+
+
+                    <br>
+                    <br>
+                    <br>
+                    <h3><strong>Code Explaination</strong></h3> <br>
+                    <strong>//Inputting Data</strong> <br>
+                    &emsp; Read position x ,position y data for n bodies <br>
+
+                    <br><br>
+
+                    &emsp;               #pragma omp parallel for schedule(static) private(j1,r1vector,r2vector,m1,m2,Forcex1,Forcey2,rdiffector,accelerationx,accerlerationy,velex,veley)<br>
+                    &emsp;<strong>// make multiple variable private to make simulation thread safe </strong><br>
+                    &emsp;for (lld i1 = 0; i1 < n; i1++)<br>
+                    &emsp;&emsp;{<br>
+                        &emsp;&emsp;//each body <br>
+                        &emsp;&emsp;// current status then update each body wrt static position of <br>
+
+                        &emsp;&emsp;m1 = mass[i1];<br>
+                        &emsp;&emsp;newposxi1 = posx[i1];newposyi1 = posy[i1];<br>
+                        &emsp;&emsp;Forcex1 = 0;<br>
+                        &emsp;&emsp;Forcey2 = 0;<br>
+                        &emsp;&emsp;//consider all bodies except i1 th to effect n(i1)<br>
+                        &emsp;&emsp;for (j1 = 0; j1 < n ; j1++)<br>
+                        &emsp;&emsp;{<br>
+                        &emsp;&emsp;&emsp;if (j1!=i1)<br>
+                        &emsp;&emsp;&emsp;{<br>
+                    &emsp;&emsp;&emsp;&emsp;m2 = mass[j1];<br>
+                    &emsp;&emsp;&emsp;&emsp;r1vector = posx[j1]-posx[i1] ; //wrt to current body<br>
+                    &emsp;&emsp;&emsp;&emsp;r2vector = posy[j1]-posy[i1] ; //wrt to current body<br>
+                    &emsp;&emsp;&emsp;&emsp;rdiffector  = r1vector*r1vector+r2vector*r2vector;<br>
+                    &emsp;&emsp;&emsp;&emsp;rdiffector = pow(rdiffector,1.5);<br>
+
+                    &emsp;&emsp;&emsp;&emsp;Forcex1 = Forcex1+ (((Gconstant*m1*m2)/rdiffector)*r1vector) ;<br>
+                    &emsp;&emsp;&emsp;&emsp;Forcey2 = Forcey2+ (((Gconstant*m1*m2)/rdiffector)*r2vector) ;<br>
+
+
+
+                    &emsp;&emsp;&emsp;}<br>
+                
+                    &emsp;&emsp;}<br>
+                    &emsp;&emsp;// <strong>Update velocity and position vector</strong> <br>
+            
+                    &emsp;&emsp;accelerationx = Forcex1/m1;<br>
+                    &emsp;&emsp;tempvx1 = velex[i1] + accelerationx*deltat;<br>
+                    &emsp;&emsp;posx[i1] += (velex[i1]*deltat+(0.5*accelerationx*deltat*deltat) );<br>
+                    &emsp;&emsp;velex[i1] = tempvx1;<br>
+
+                    &emsp;&emsp;//moement in y direction <br>
+            
+                    &emsp;&emsp;accerlerationy = Forcey2/m1;<br>
+                    &emsp;&emsp;tempvy2 = veley[i1] + accerlerationy*deltat;<br>
+                    &emsp;&emsp;posy[i1] += (veley[i1]*deltat+(0.5*accerlerationy*deltat*deltat) );<br>
+                    &emsp;&emsp;veley[i1] = tempvy2;<br>
+
+
+        
+        
+            
+        
+                    &emsp;&emsp;}<br>
+                            <br><br><br><br>
+                            &emsp;&emsp;<div style="margin-left: 7%;"><h3>Input Data</h3></div>
+                            <br><br>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;The following data is for 3.0Ghz turbo 10 cores hyperthreaded intel CPU
+                            <table width="75%" align="center" border=1> 
+                                <tr>
+                                    <th>Threads</th>
+                                    <th>Time(s) of execution </th>
+                                    <th>Parallelisation Factor</th>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>191.981 </td>
+                                    <td>  </td>
+
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>112.019 </td>
+                                    <td> 0.82650996 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>72.0463 </td>
+                                    <td> 0.83296622 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>52.1042 </td>
+                                    <td> 0.8326824 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td>46.9954 </td>
+                                    <td> 0.83912007 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>12</td>
+                                    <td>43.5288 </td>
+                                    <td>0.84356188  </td>
+
+                                </tr>
+                                <tr>
+                                    <td>16</td>
+                                    <td>39.5014 </td>
+                                    <td> 0.84719275 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>20</td>
+                                    <td>36.4251 </td>
+                                    <td> 0.85291280  </td>
+
+                                </tr>
+                                <tr>
+                                    <td>32</td>
+                                    <td>30.9002 </td>
+                                    <td> 0.86611115 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>40</td>
+                                    <td>28.041 </td>
+                                    <td> 0.87583453 </td>
+
+                                </tr>
+                             
+                                </table>
+
+
+                            
+                            &emsp;&emsp;<div style="margin-left: 7%;">
+                                <h3>Speed Up Improvement
+
+                            </h3>
+                            </div>
+                            <img style = "margin-left: 27%;"src="img1openmp.png">
+                        
+
+
+                </td></tr>
+            </tbody>
+        </table><br>
+    
+        <!-- <table width="90%" align="center" border=1> 
+            <tbody><tr><td> <b> MPI Implementation and Code:</b></td></tr>
+                <tr><td> Your Description here</td></tr>
+            </tbody>
+        </table><br> -->
+
+
+        <table width="90%" align="center" border=1> 
+            <tbody><tr><td> <b id="MPI"> MPI Implementation and Code: <a href="alphav2.cpp">Click here for source code</a><br></b>Click here to see Report :    <a href="CED17I047-DA2Report-MPI.pdf">Report</a> </td></tr>
+                <tr><td> 
+                    <br>
+                    <strong>Parallelisation strategy</strong>
+                    <br>
+                    <br>
+                    <br>
+                    Although using similar methodology used in openmp parallelisation for the same problem might
+work but will incur much communication overhead,thus block partitioning methodology is used
+                    <br>
+                    <br>
+                    Block partitioning methodology is used for MPI thus utilising less memory and improving load
+balancing. Cache misses are still prominent but load balance improvement makes up for it.
+                    <br>
+
+                    <br>
+                    Parallelisation of computing of force is done by distributing the array of mass vector to p
+nodes reducing the workload to n/p
+                    <br>          
+
+                    <br>
+                    Initial vector position and mass of n bodies information is sent to each worker (because
+computation of i th requires all rest n-1 bodies force).
+                    <br>          
+                         
+                
+                    <br>
+                    The velocities of the bodies are distributed among p workers each given their velocity for
+usage of updation of individual rvector and velocity value.
+                    <br> 
+                    <br>
+                    To avoid race condition rvector ,velocity ,acceleration(force) is stored in individual array
+data type and updation is done once force is computed for rest n-1 bodies .
+                    <br>   
+
+
+
+
+
+                    <i>MPI_Bcast(masses, NUMBER_OF_PARTICLES, MPI_DOUBLE,
+                        MASTER_PROCESSOR_RANK, MPI_COMM_WORLD);//send same information</i>
+
+                        <br>
+                        <i>
+                            MPI_Bcast(masses, NUMBER_OF_PARTICLES, MPI_DOUBLE,
+                            MASTER_PROCESSOR_RANK, MPI_COMM_WORLD);//send same information</i>
+                            <br>
+                            <br>
+                            Note velocities are scattered (equally distributed)
+                            <br>
+                            <i>
+                                MPI_Scatter(velocities, 2 * particles_per_processor, MPI_DOUBLE,
+curr_proc_velocities, 2 * particles_per_processor, MPI_DOUBLE,
+MASTER_PROCESSOR_RANK, MPI_COMM_WORLD);</i>
+                                
+                                <br>
+
+                                For each worker force is calculated and once force(acceleration )is known those specific
+                                bodies velocities are updated.
+                                <br>
+                                Specific distributed velocities(current proc_velcoties ) are collected again MPI_GATHER.
+
+                    <br>
+                    <br>
+                    <br>
+                    <h3><strong>Code Explaination</strong></h3> <br>
+                    <strong>//Inputting Data</strong> <br>
+                    &emsp; Read position x ,position y data for n bodies <br>
+
+                    <br><br>
+                    Initialize MPI and call n workers
+                    <br>
+//Share rvector and masses to all workers .<br>
+//Distribute velocity<br><br>
+&emsp; for each time step<br>
+<!-- &emsp; &emsp; compute_force(masses, positions, forces_each_proc, rank_of_processor, BODIES_per_proc);<br> -->
+<strong>..</strong><br>
+<strong>..</strong><br><strong>..</strong><br>
+<strong>..</strong><br>
+
+&emsp; &emsp; for (particle = starting_index; particle <= ending_index; particle++) <br>
+&emsp; &emsp; {<br>
+    &emsp;&emsp; &emsp; double force_x = 0;<br>
+    &emsp;&emsp; &emsp; double force_y = 0;<br>
+    &emsp;&emsp; &emsp; int i = 0;<br>
+    &emsp;&emsp; &emsp; for (i = 0; i < NUMBER_OF_PARTICLES; i++) <br>
+    &emsp;&emsp; &emsp; {<br>
+        &emsp;&emsp;&emsp; &emsp; if (particle == i) <br>
+        &emsp;&emsp;&emsp; &emsp; {<br>
+            &emsp;&emsp;&emsp; &emsp; continue;<br>
+            &emsp;&emsp;&emsp; &emsp; }<br>
+            &emsp;&emsp; &emsp; double x_diff = positions[2 * i] - positions[2 * particle];<br>
+            &emsp;&emsp; &emsp; double y_diff = positions[2 * i + 1] - positions[2 * particle + 1];<br>
+            &emsp;&emsp; &emsp; double distance = sqrt(x_diff * x_diff + y_diff * y_diff);<br>
+            &emsp;&emsp; &emsp; double distance_cubed = distance * distance * distance;<br>
+
+            &emsp;&emsp; &emsp; double force_total = GRAVITATIONAL_CONSTANT * masses[i] / distance;<br>
+            &emsp;&emsp; &emsp; force_x += GRAVITATIONAL_CONSTANT * masses[i] * x_diff / distance_cubed;<br>
+            &emsp;&emsp; &emsp; force_y += GRAVITATIONAL_CONSTANT * masses[i] * y_diff / distance_cubed;<br>
+            &emsp;&emsp; &emsp; }<br>
+
+            &emsp; &emsp; forces_each_proc[2 * (particle - starting_index)] = force_x;<br>
+            &emsp; &emsp; forces_each_proc[2 * (particle - starting_index) + 1] = force_y;<br>
+    
+
+            &emsp; &emsp; }<br>
+
+<br><br>
+
+<strong>..</strong><br>
+<strong>..</strong><br>
+<strong>..</strong><br>
+<strong>..</strong><br>
+<strong>//Update positions and velocity</strong><br>
+
+ <!-- &emsp; update_positions_velocities(positions, forces_each_proc, velocities_per_proc, rank_of_processor, BODIES_per_proc);<br> -->
+ &emsp;&emsp;for (particle = starting_index; particle <= ending_index; particle++) <br>
+ &emsp;&emsp;&emsp;{<br>
+    &emsp;&emsp;&emsp;//   s = ut+1at^2<br>
+    &emsp;&emsp;&emsp;positions[2 * particle] += velocities_per_proc[2 * (particle - starting_index)] * DELTA_T + (forces_each_proc[2 * (particle - starting_index)] * DELTA_T * DELTA_T / 2);<br>
+    &emsp;&emsp;&emsp;positions[2 * particle + 1] += velocities_per_proc[2 * (particle - starting_index) + 1] * DELTA_T + (forces_each_proc[2 * (particle - starting_index) + 1] * DELTA_T * DELTA_T / 2);<br>
+
+    &emsp;&emsp;&emsp;// v = u+at <br>
+    &emsp;&emsp;&emsp;velocities_per_proc[2 * (particle - starting_index)] += forces_each_proc[2 * (particle - starting_index)] * DELTA_T;<br>
+    &emsp;&emsp;&emsp;velocities_per_proc[2 * (particle - starting_index) + 1] += forces_each_proc[2 * (particle - starting_index) + 1] * DELTA_T;<br>
+     
+     
+    &emsp;&emsp;}<br>
+
+    &emsp;&emsp; MPI_Allgather(MPI_IN_PLACE, 1, aggregat_Type, positions, 1, aggregat_Type, MPI_COMM_WORLD);<br>
+
+    &emsp;&emsp;  //end for
+
+
+                    
+                            <br><br><br><br>
+                            &emsp;&emsp;<div style="margin-left: 7%;"><h3>Input Data</h3></div>
+                            <br><br>
+                            <table width="75%" align="center" border=1> 
+                                <tr>
+                                    <th>Threads</th>
+                                    <th>Time(s) of execution </th>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1160.188 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>618.5245 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>350.4052 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>275.813 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>242.067 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>16</td>
+                                    <td>169.0924 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>20</td>
+                                    <td>147.308 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>32</td>
+                                    <td>122.1699 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>64</td>
+                                    <td>105.435 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>128</td>
+                                    <td>111.9598 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>140</td>
+                                    <td>112.3102 </td>
+
+                                </tr>
+                             
+                             
+                                </table>
+
+
+                            
+                            &emsp;&emsp;<div style="margin-left: 7%;">
+                                <h3>Speed Up Improvement
+
+                            </h3>
+                            </div>
+                            <img style = "margin-left: 27%;"src="mpidata.png">
+                        
+                        </td></tr>
+
+             
+            
+           
+        </tbody>
+
+        </table>
+        <br>
+
+        
+        <div style="margin-left: 30%;" >
+            <video width="640" height="640" controls loop>
+            <source src="mpisim.mkv" type="video/mp4" >
+                
+          </video>
+          <br>Simulation of 2000 bodies (computed using MPI)
+          </div>
+
+
+
+
+    
+        <!-- <table width="90%" align="center" border=1> 
+            <tbody><tr><td> <b> CUDA Implementation and Code: <a  href="">Source code</a></b></td></tr>
+                <tr><td> Your Description here</td></tr>
+            </tbody>
+        </table> -->
+
+
+
+        <table width="90%" align="center" border=1> 
+            <!-- <tbody><tr><td> <b> MPI Implementation and Code: <a href="alphav2.cpp">Click here for source code</a><br></b>Click here to see Report :    <a href="CED17I047-DA2Report-MPI.pdf">Report</a> </td></tr> -->
+                <tbody><tr><td> <b id="CUDA"> CUDA Implementation and Code: <a  href="maincuda.cu">Source code</a></b></td></tr>
+                <tr><td> 
+                    <br>
+                    <strong>Parallelisation strategy</strong>
+                    <br>
+                    <br>
+                    <br>
+                    Parallelisation is achieved by making each body force computation parallel by calling kernel
+                    <br>
+                    <br>
+                    
+                    Although calling kernel multiple times causes overhead ,dividing all bodies force computation requires less kernel call but overloads memory limitations of kernel .
+                    <br>
+
+
+                    <br>
+                    Initial vector position and mass of n bodies information is sent to the kernel (because
+computation of i th requires all rest n-1 bodies force).
+                    <br>          
+                         
+                
+
+                    To avoid race condition rvector ,velocity ,acceleration(force) is stored in individual array
+data type and updation is done once force is computed from rest n-1 bodies .
+                    <br>   
+
+
+
+
+                    <br>
+                    <br>
+                    <br>
+                    // each body computation of force is parallelised .
+                    <br>
+//copy position vector , velocity vector, mass vector to kernel
+<br>
+Call kernel 
+<br>
+//copy force vector back 
+<br>
+
+//update new velocity and position of the ith body
+<br>
+ 
+
+                    <br>
+                    <br>
+
+                    <h3><strong>Code Explaination</strong></h3> <br>
+                    <strong>//Inputting Data</strong> <br>
+                    &emsp; Read position x ,position y data for n bodies <br>
+
+                    <br><br>
+
+                    <br>
+                    &emsp;      for(lld i1 = 0 ;i1< nobj; i1++)                    <br>
+                    &emsp;{   <br>
+        
+                        &emsp;&emsp;cudaEventCreate(&start);                    <br>
+                        &emsp;&emsp;cudaEventCreate(&stop);                    <br>
+                        &emsp;&emsp;cudaEventRecord(start,0);                    <br>
+                        &emsp;&emsp;cudaEventRecord(stop,0);                    <br>
+                    
+        
+                       
+        
+                        &emsp;&emsp;cudaMemcpy(dposx,posx,array_bytes,cudaMemcpyHostToDevice);                    <br>
+                        &emsp;&emsp;cudaMemcpy(dposy,posy,array_bytes,cudaMemcpyHostToDevice);                    <br>
+                        &emsp;&emsp;cudaMemcpy(dmass,mass,array_bytes,cudaMemcpyHostToDevice);                    <br>
+                        &emsp;&emsp;cudaMemcpy(dvelex,velex,array_bytes,cudaMemcpyHostToDevice);                    <br>
+                        &emsp;&emsp;cudaMemcpy(dveley,veley,array_bytes,cudaMemcpyHostToDevice);                    <br>
+        
+        
+        
+        
+                        &emsp;&emsp;kernelcomputenewvel<<<1,threads_in_block>>>(dmass,dvelex,dveley,dposx,dposy,forecearrayx,forecearrayy,i1,threads_in_block,nobj);                    <br>
+                        &emsp;&emsp;// __global__ void kernelcomputenewvel(double idx ,double masslist[], double velocitylistx[],double velocitylisty[], double postionx[],double postiony[],lld threadcunt,double Forcex1[],double Forcey2[] )                    <br>
+                    
+        
+        
+        
+                        &emsp;&emsp;cudaMemcpy(hoforecearrayx,forecearrayx,threadsize,cudaMemcpyDeviceToHost);                    <br>
+                        &emsp;&emsp;cudaMemcpy(hoforecearrayy,forecearrayy,threadsize,cudaMemcpyDeviceToHost);                    <br>
+        
+                        &emsp;&emsp;cudaEventSynchronize(stop);                    <br>
+                        &emsp;&emsp;cudaEventElapsedTime(&et, start, stop);                    <br>
+                        &emsp;&emsp;cudaEventDestroy(start);                    <br>
+                        &emsp;&emsp;cudaEventDestroy(stop);                    <br>
+        
+        
+                        &emsp;&emsp;average_kernel_time+=et;                     <br>
+                        <br><br> &emsp;&emsp; //Update Vectors <br>
+                        &emsp;&emsp;Forcex1 = 0;Forcey2 = 0;                    <br>
+
+                        <br><br>//reduce the sum 
+                        &emsp;&emsp;&emsp;for(int ij1=0;ij1 threads_in_block;ij1++)                    <br>
+                            &emsp;&emsp;&emsp;{                    <br>
+                                &emsp;&emsp;&emsp;Forcex1 += hoforecearrayx[ij1];                    <br>
+                                &emsp;&emsp;&emsp;Forcey2 += hoforecearrayy[ij1] ;                    <br>
+                                &emsp;&emsp;&emsp;}                    <br>
+                                <br>
+                                <br>
+        
+                                &emsp;&emsp;&emsp;//once done update with new vector                    <br> <br>
+        
+                                &emsp;&emsp;m1 = mass[i1];                    <br>
+        
+                                &emsp;&emsp;// accelerationx = Gconstant*Forcex1/m1;                    <br>
+                                &emsp;&emsp;accelerationx = Gconstant*Forcex1;                    <br>
+        
+                                &emsp;&emsp;tempvx1 = velex[i1] + accelerationx*deltat;                    <br>
+                                &emsp;&emsp;posx[i1] += (velex[i1]*deltat+(0.5*accelerationx*deltat*deltat) );                    <br>
+                                &emsp;&emsp;velex[i1] = tempvx1;                    <br>
+        
+                                &emsp;&emsp;//moement in y direction                     <br>
+                    
+                                &emsp;&emsp;// accerlerationy = Gconstant*Forcey2/m1;                    <br>
+                                &emsp;&emsp;accerlerationy = Gconstant*Forcey2;                    <br>
+        
+                                &emsp;&emsp;tempvy2 = veley[i1] + accerlerationy*deltat;                    <br>
+                                &emsp;&emsp;posy[i1] += (veley[i1]*deltat+(0.5*accerlerationy*deltat*deltat) );                    <br>
+                                &emsp;&emsp;veley[i1] = tempvy2;                    <br>
+        
+                    
+        
+        
+                                &emsp;                    }                    <br>
+
+
+
+
+
+                    <br>
+
+
+<br><br>
+
+
+
+
+                    
+                            <br><br><br><br>
+                            &emsp;&emsp;<div style="margin-left: 7%;"><h3>Input Data</h3></div>
+                            <br><br>
+                            <table width="75%" align="center" border=1> 
+                                <tr>
+                                    <th>Threads</th>
+                                    <th>Time(s) of execution </th>
+
+                                </tr>
+                                <tr>
+                                    <td>32</td>
+                                    <td>152456424 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>64</td>
+                                    <td>121030088 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>128</td>
+                                    <td>91820974 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>256</td>
+                                    <td>52735786 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>512</td>
+                                    <td>29772088 </td>
+
+                                </tr>
+                                <tr>
+                                    <td>1024</td>
+                                    <td>15715570 </td>
+
+                                </tr>
+                             
+                             
+                                </table>
+
+
+                            
+                            &emsp;&emsp;<div style="margin-left: 7%;">
+                                <h3>Speed Up Improvement
+
+                            </h3>
+                            </div>
+                            <img style = "margin-left: 27%;"src="cudadata.png">
+                        
+
+
+                </td></tr>
+                <!-- <div style="margin-left: 30%;" >
+                    <video width="640" height="640" controls loop>
+                    <source src="mpisim.mkv" type="video/mp4" >
+                        
+                  </video>
+                  </div> -->
+            </tbody>
+        </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    <div>
+    <table width="100%" height="8%" bgcolor="#003060">
+    <tbody ><tr width="90%" align="center">
+        <td> <font align="center" size="3" color="#ffffff">Thank You!!</font>
+        </td>
+    </tr>
+    </tbody></table>
+    </div>
+    
+    
+    
+    </body></html>
+    
