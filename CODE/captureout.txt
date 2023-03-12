@@ -1,0 +1,7 @@
+MAXIMUM NUMBER of objects 111002
+Selected number of objects 1536
+Number of Threads 1024
+Deltat 10
+verage kernel time :  1536000.000000  
+
+Total time:  193894368.000000  
