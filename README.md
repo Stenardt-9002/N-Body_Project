@@ -1,4 +1,4 @@
-# N Body Simulation using C++/Cuda C++/OpenMP C++/MPI 
+# N Body Simulation using C++/ C-Cuda /C-OpenMP /C-MPI 
 The simulation is done using freeglutdev OpenGL (legacy)(See requirements).
 
 ---
@@ -22,6 +22,8 @@ The following solution was part of activity in HPC course offered in fall of 202
 1. [Test](#)
 <br>
 <br>
+
+
 ## Introduction
 <br>
 
